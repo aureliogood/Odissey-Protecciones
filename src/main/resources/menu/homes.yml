@@ -1,0 +1,58 @@
+layout-version: 4
+# ==============================================================================
+#          OdisseyProtecciones - Homes (menu/homes.yml)
+# ==============================================================================
+# Plantilla 'region' repetida por cada home disponible.
+# Clic izquierdo: teletransportar. Clic derecho: establecer home.
+# Placeholders: %region% %world% %home% %x% %y% %z%
+# ==============================================================================
+size: 54
+title: '&7» Mis homes «'
+open-sound: UI_BUTTON_CLICK
+
+filler:
+  enabled: true
+  material: BLACK_STAINED_GLASS_PANE
+  name: '&r'
+
+items:
+  region:
+    slot: auto
+    material: ENDER_PEARL
+    name: '&d%region%'
+    lore:
+    - '&7Mundo: &f%world%'
+    - '&7Home: &f%home%'
+    - ''
+    - '&eClic izquierdo: teletransportar'
+    - '&eClic derecho: establecer home'
+
+  previous:
+    slot: 45
+    material: ARROW
+    name: '&eAnterior'
+    lore: []
+    action: page:prev
+    sound: UI_BUTTON_CLICK
+
+  close:
+    slot: 48
+    material: OAK_DOOR
+    name: '&cCerrar'
+    lore: []
+    action: close
+
+  back:
+    slot: 49
+    material: BARRIER
+    name: '&cVolver'
+    lore: []
+    action: back
+
+  next:
+    slot: 53
+    material: ARROW
+    name: '&aSiguiente'
+    lore: []
+    action: page:next
+    sound: UI_BUTTON_CLICK

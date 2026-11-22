@@ -1,0 +1,224 @@
+# OdisseyProtecciones - Plugin de protecciones de terreno (GPLv3)
+# No cambies la version de config a menos que sepas lo que haces!
+config_version: 19
+uuidupdated: true
+region_negative_min_max_updated: true
+
+# ---------------------------------------------------------------------------------------
+# OdisseyProtecciones - Configuracion principal
+# Las configuraciones de bloques estan en la carpeta blocks.
+# Para crear nuevos bloques, copia el "block1.yml" por defecto y crea otro archivo (ej. "block2.yml")
+# ---------------------------------------------------------------------------------------
+
+# Cooldown entre colocar bloques de proteccion (en segundos). -1 para desactivar.
+placing_cooldown: -1
+
+# Ponlo en true para no bloquear el arranque del servidor al cargar la cache de UUID.
+# /ps add y /ps remove no funcionaran con jugadores desconectados hasta que la cache termine de cargar.
+async_load_uuid_cache: true
+
+# Permite o no que las regiones tengan nombres identicos (desde /ps name).
+# Si se activa, los jugadores tendran que usar numeros despues del nombre si hay duplicados.
+allow_duplicate_region_names: false
+
+# Tiempo en segundos entre intentos de /ps view.
+# Puede evitar lag por spam del comando.
+ps_view_cooldown: 3
+
+# Comando base del plugin (cambialo si entra en conflicto con otros comandos)
+base_command: "ps"
+
+# Alias del comando
+aliases:
+  - "oproyecto"
+  - "oproteccion"
+
+# Soltar o no los objetos al suelo si el inventario esta lleno (ej. durante /ps unclaim)
+# Si es false, se cancelara el evento y se avisara que el inventario esta lleno
+drop_item_when_inventory_full: true
+
+# Exige o no que las regiones colocadas esten junto a o superpuestas con regiones existentes que el jugador ya posee.
+# Esto puede hacer el mundo mas limpio y con menos regiones dispersas.
+# Establece el numero de regiones no adyacentes con el permiso odisseyprotecciones.adjacent.x (por defecto 1, -1 para omitir)
+# Tambien se puede omitir con odisseyprotecciones.admin
+regions_must_be_adjacent: false
+
+# Da o no a los jugadores la opcion de fusionar regiones nuevas con las que ya poseen (superpuestas)
+# para crear una region grande. Puede fusionar cualquier region con odisseyprotecciones.admin
+# Requiere el permiso odisseyprotecciones.merge para usarse (con /ps merge)
+# NOTA: por limitaciones de WorldGuard, las regiones fusionadas ignoraran y_radius e iran de bedrock al cielo
+# ya que las regiones poligonales solo pueden ser 2D, no 3D
+allow_merging_regions: true
+
+# Permite o no que las regiones fusionadas tengan huecos (fusionar varias regiones en circulo dejando el interior sin proteger).
+# Esto solo se comprueba durante el proceso de fusion; no separara regiones que ya tengan huecos.
+allow_merging_holes: true
+
+# Si al entrar, los jugadores tienen por defecto la colocacion de bloques de proteccion desactivada (equivalente a ejecutar /ps toggle)
+default_protection_block_placement_off: false
+
+# Si no tienes LuckPerms, OdisseyProtecciones no puede determinar los limites de jugadores desconectados (porque depende
+# de permisos), y por tanto requiere que los jugadores esten conectados. Ponlo en true si tu servidor no necesita limites
+# (y por tanto la comprobacion es innecesaria).
+allow_addowner_for_offline_players_without_lp: false
+
+# Permite o no que los miembros de una region usen /ps home a la region.
+allow_home_teleport_for_members: true
+
+admin:
+  # Si /ps admin cleanup remove debe eliminar regiones que tienen miembros, pero no duenos (tras eliminar
+  # duenos inactivos).
+  # Las regiones sin duenos ni miembros se eliminaran siempre.
+  cleanup_delete_regions_with_members_but_no_owners: true
+
+database:
+  # Copia de seguridad de las protecciones en una base de datos (SQLite o MySQL).
+  # WorldGuard ya guarda las regiones en su propio archivo; esta base de datos es una
+  # red de seguridad adicional que permite restaurar protecciones si se pierden.
+  enabled: true
+
+  # Tipo de base de datos: "sqlite" (local, no requiere nada) o "mysql".
+  type: "sqlite"
+
+  # Archivo SQLite (relativo a la carpeta del plugin). Solo se usa con type: sqlite.
+  sqlite_file: "protecciones.db"
+
+  # Conexion MySQL. Solo se usa con type: mysql. El driver se descarga automaticamente.
+  mysql:
+    host: "localhost"
+    port: 3306
+    database: "odisseyprotecciones"
+    username: "root"
+    password: ""
+
+  # Prefijo de las tablas creadas por el plugin.
+  table_prefix: "ps_"
+
+  # Cada cuantos minutos se hace una copia completa de las protecciones (0 = desactivado).
+  snapshot_interval_minutes: 10
+
+  # Al iniciar, restaurar en WorldGuard las protecciones que esten en la base de datos
+  # pero que hayan desaparecido del servidor.
+  restore_missing_on_startup: true
+
+  # Guardar un registro de auditoria de creaciones, eliminaciones y transferencias.
+  audit_enabled: true
+
+economy:
+  # Establece limites al precio de alquiler. Ponlo en -1.0 para desactivar.
+  max_rent_price: -1.0
+  min_rent_price: 1.0
+
+  # Establece limites al periodo entre pagos de alquiler, en segundos (86400 segundos = 1 dia). Pon -1 para desactivar.
+  max_rent_period: -1
+  min_rent_period: 1
+
+  # Establece impuestos en las regiones.
+  # Los impuestos se configuran en cada archivo de bloque.
+  # Activa o no el comando de impuestos.
+  # Si ya tienes regiones, puede que quieras poner a cada una un autopayer (jugador que paga impuestos automaticamente).
+  # Esto se hace con /ps admin settaxautopayers, que actualiza cada region del servidor con un autopayer de su lista de duenos.
+  tax_enabled: false
+
+  # Avisar a los jugadores de pagos de impuestos pendientes de las regiones que poseen.
+  tax_message_on_join: true
+
+  # Avisos de vencimiento del alquiler, en segundos antes del siguiente cobro.
+  # 86400 = 24 horas, 3600 = 1 hora. Se envia un aviso por cada umbral alcanzado.
+  rent_warning_seconds: [86400, 3600]
+
+menu:
+  # Activa el sistema de menus de inventario (archivos en la carpeta "menu").
+  enabled: true
+
+  # Abrir el menu principal al ejecutar /ps sin argumentos.
+  open_on_command: true
+
+  # Activa o desactiva globalmente los sonidos de los menus.
+  sounds: true
+
+  # Muestra una animacion de titulo al abrir el menu principal (estilo ODISSEY).
+  open_animation: true
+
+shop:
+  # Activa la tienda de protecciones (/ps shop).
+  enabled: true
+
+  # Activa los reembolsos de protecciones (/ps shop reembolsar).
+  refund_enabled: true
+
+  # Porcentaje del valor original que se devuelve al reembolsar una proteccion (0 - 100).
+  refund_percentage: 50.0
+
+hologram:
+  # Muestra un holograma flotante sobre cada bloque de proteccion.
+  enabled: true
+
+  # Altura del holograma sobre el bloque.
+  offset_y: 1.3
+
+  # Cada cuantos segundos se actualiza la info del holograma (0 = nunca, solo al crear).
+  update_interval_seconds: 60
+
+  # Orientacion: CENTER, FIXED o VERTICAL.
+  billboard: "CENTER"
+
+  # Si es true, el texto se ve a traves de bloques.
+  see_through: false
+
+  # Fondo del texto.
+  # background: true usa el fondo gris translucido por defecto de Minecraft.
+  # Si quieres un fondo personalizado (o transparente), rellena background_color.
+  background: true
+  # Color de fondo. Formatos: "transparent"/"none", "#AARRGGBB", "#RRGGBB" o "a,r,g,b".
+  # Ejemplos: "#00000000" (transparente), "#80000000" (negro 50%), "#FF202020".
+  # Si se deja vacio ("") se usa el ajuste background de arriba.
+  background_color: ""
+
+  # Sombra del texto (text shadow).
+  shadowed: true
+
+  # El holograma es solo visual; el menu se abre interactuando con el bloque protector.
+  click_to_manage: false
+  click_width: 2.0
+  click_height: 0.6
+
+  # Lineas del holograma. Placeholders disponibles:
+  #   %region% (nombre de la proteccion, o "Proteccion de <dueno>")
+  #   %id% %owner% %owners% %members% %members_list%
+  #   %radius% %size_x% %size_z% %size_y% %world% %x% %y% %z% %location% %hidden%
+  #   %status% (Protegida/Alquilada/En alquiler/En venta) %price% %rent_until%
+  #   %days_until_removal% (tiempo restante: d h m; "-" si autoeliminacion no aplica)
+  lines:
+    - "&b&l%region%"
+    - "&7Estado: &f%status%"
+    - "&7Dueno: &f%owner%"
+    - "&7Miembros: &f%members%"
+    - "&7Radio: &f%radius%"
+    - "&7Se elimina en: &c%days_until_removal%"
+    - "&7Ubicacion: &f%world% &7(&f%x%&7, &f%y%&7, &f%z%&7)"
+    - "&8&m--------------------"
+
+auto_remove:
+  # Elimina automaticamente las protecciones cuyos duenos esten inactivos.
+  enabled: true
+
+  # Dias de inactividad (sin conectarse) antes de eliminar la proteccion. El holograma muestra el tiempo restante en dias, horas y minutos.
+  days: 60
+
+  # Cada cuantos minutos se revisa la inactividad.
+  check_interval_minutes: 60
+
+  # Si es true, tambien elimina regiones que tienen miembros activos pero ningun dueno activo.
+  delete_regions_with_members_but_no_owners: true
+
+  # Avisar a los duenos cuando falten pocos dias para que su proteccion sea eliminada.
+  warn_enabled: true
+
+  # Avisos que se envian antes de la eliminacion (en dias). Se avisa una vez por cada umbral.
+  warn_days: [7, 3, 1]
+
+messages:
+  # Prefijo usado en los mensajes de chat de feedback del plugin (identidad ODISSEY).
+  # Formato de color con '&' o '&#RRGGBB'. Dejalo vacio para no usar prefijo.
+  prefix: "&8[&eODISSEY&8]&r "

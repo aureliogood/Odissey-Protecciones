@@ -1,0 +1,68 @@
+layout-version: 4
+# ==============================================================================
+#       OdisseyProtecciones - Miembros (menu/members.yml)
+# ==============================================================================
+# Plantillas 'owner' (co-dueno) y 'member' repetidas por cada jugador.
+# Placeholder: %player%
+# ==============================================================================
+size: 54
+title: '&7» Miembros de %region% «'
+open-sound: UI_BUTTON_CLICK
+
+filler:
+  enabled: true
+  material: BLACK_STAINED_GLASS_PANE
+  name: '&r'
+
+items:
+  owner:
+    slot: auto
+    material: PLAYER_HEAD
+    head-owner: '%player%'
+    name: '&6%player%'
+    lore:
+    - '&7Co-dueno'
+    - '&eHaz clic para eliminar.'
+
+  member:
+    slot: auto
+    material: PLAYER_HEAD
+    head-owner: '%player%'
+    name: '&e%player%'
+    lore:
+    - '&7Miembro'
+    - '&eHaz clic para eliminar.'
+
+  add-owner:
+    slot: 45
+    material: GOLD_BLOCK
+    name: '&6Anadir co-dueno'
+    lore:
+    - '&7Abre el selector de'
+    - '&7jugadores conectados.'
+    action: member:add-owner
+    sound: UI_BUTTON_CLICK
+
+  add-member:
+    slot: 46
+    material: LIME_CONCRETE
+    name: '&aAnadir miembro'
+    lore:
+    - '&7Abre el selector de'
+    - '&7jugadores conectados.'
+    action: member:add-member
+    sound: UI_BUTTON_CLICK
+
+  back:
+    slot: 49
+    material: BARRIER
+    name: '&cVolver'
+    lore: []
+    action: back
+
+  close:
+    slot: 53
+    material: OAK_DOOR
+    name: '&cCerrar'
+    lore: []
+    action: close

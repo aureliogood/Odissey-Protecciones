@@ -1,0 +1,61 @@
+layout-version: 4
+# ==============================================================================
+#   OdisseyProtecciones - Editor de permisos (menu/permissions-member.yml)
+# ==============================================================================
+# Plantilla 'perm' repetida por cada permiso disponible.
+# Placeholders: %player% %perm_icon% %perm_name% %perm_state%
+# ==============================================================================
+size: 27
+title: '&7» Permisos de %player% «'
+open-sound: UI_BUTTON_CLICK
+
+filler:
+  enabled: true
+  material: BLACK_STAINED_GLASS_PANE
+  name: '&r'
+
+content-slots: [10, 11, 12, 13, 14, 15, 16, 19]
+
+items:
+  perm:
+    slot: auto
+    material: '%perm_icon%'
+    name: '&b%perm_name%'
+    lore:
+    - '&7Estado: %perm_state%'
+    - ''
+    - '&eHaz clic para alternar'
+
+  all:
+    slot: 21
+    material: LIME_DYE
+    name: '&aActivar todo'
+    lore:
+    - '&7Concede todos los permisos.'
+    action: perm:all
+    sound: UI_BUTTON_CLICK
+
+  none:
+    slot: 23
+    material: GRAY_DYE
+    name: '&cDesactivar todo'
+    lore:
+    - '&7Revoca todos los permisos.'
+    action: perm:none
+    sound: UI_BUTTON_CLICK
+
+  back:
+    slot: 22
+    material: ARROW
+    name: '&eVolver'
+    lore: []
+    action: back
+    sound: UI_BUTTON_CLICK
+
+  close:
+    slot: 26
+    material: BARRIER
+    name: '&cCerrar'
+    lore: []
+    action: close
+    sound: UI_BUTTON_CLICK

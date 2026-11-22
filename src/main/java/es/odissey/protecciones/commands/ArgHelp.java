@@ -1,0 +1,133 @@
+package es.odissey.protecciones.commands;
+
+import es.odissey.protecciones.PSL;
+import es.odissey.protecciones.OdisseyProtecciones;
+import es.odissey.protecciones.utils.MiscUtil;
+import es.odissey.protecciones.utils.TextGUI;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.apache.commons.lang3.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
+public class ArgHelp implements PSCommandArg {
+
+    private static class HelpEntry {
+        String[] permission;
+        TextComponent msg;
+
+        HelpEntry(TextComponent msg, String... permission) {
+            this.permission = permission;
+            this.msg = msg;
+        }
+    }
+
+    public static List<HelpEntry> helpMenu = new ArrayList<>();
+
+    public static void initHelpMenu() {
+        String base = "/" + OdisseyProtecciones.getInstance().getConfigOptions().base_command + " ";
+
+        helpMenu.clear();
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.INFO_HELP.msg(), PSL.INFO_HELP_DESC.msg(), base + "info"), "odisseyprotecciones.info"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.ADDREMOVE_HELP.msg(), PSL.ADDREMOVE_HELP_DESC.msg(), base), "odisseyprotecciones.members"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.ADDREMOVE_OWNER_HELP.msg(), PSL.ADDREMOVE_OWNER_HELP_DESC.msg(), base), "odisseyprotecciones.owners"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.GET_HELP.msg(), PSL.GET_HELP_DESC.msg(), base + "get"), "odisseyprotecciones.get"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.GIVE_HELP.msg(), PSL.GIVE_HELP_DESC.msg(), base + "give"), "odisseyprotecciones.give"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.COUNT_HELP.msg(), PSL.COUNT_HELP_DESC.msg(), base + "count"), "odisseyprotecciones.count", "odisseyprotecciones.count.others"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.LIST_HELP.msg(), PSL.LIST_HELP_DESC.msg(), base + "list"), "odisseyprotecciones.list", "odisseyprotecciones.list.others"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.NAME_HELP.msg(), PSL.NAME_HELP_DESC.msg(), base + "name"), "odisseyprotecciones.name"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.TRANSFER_HELP.msg(), PSL.TRANSFER_HELP_DESC.msg(), base + "transfer"), "odisseyprotecciones.transfer"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.MERGE_HELP.msg(), PSL.MERGE_HELP_DESC.msg(), base + "merge"), "odisseyprotecciones.merge"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.SETPARENT_HELP.msg(), PSL.SETPARENT_HELP_DESC.msg(), base + "setparent"), "odisseyprotecciones.setparent", "odisseyprotecciones.setparent.others"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.FLAG_HELP.msg(), PSL.FLAG_HELP_DESC.msg(), base + "flag"), "odisseyprotecciones.flags"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.RENT_HELP.msg(), PSL.RENT_HELP_DESC.msg(), base + "rent"), "odisseyprotecciones.rent"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.TAX_HELP.msg(), PSL.TAX_HELP_DESC.msg(), base + "tax"), "odisseyprotecciones.tax"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.BUY_HELP.msg(), PSL.BUY_HELP_DESC.msg(), base + "buy"), "odisseyprotecciones.buysell"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.SELL_HELP.msg(), PSL.SELL_HELP_DESC.msg(), base + "sell"), "odisseyprotecciones.buysell"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.HOME_HELP.msg(), PSL.HOME_HELP_DESC.msg(), base + "home"), "odisseyprotecciones.home"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.SETHOME_HELP.msg(), PSL.SETHOME_HELP_DESC.msg(), base + "sethome"), "odisseyprotecciones.sethome"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.TP_HELP.msg(), PSL.TP_HELP_DESC.msg(), base + "tp"), "odisseyprotecciones.tp"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.VISIBILITY_HIDE_HELP.msg(), PSL.VISIBILITY_HIDE_HELP_DESC.msg(), base + "hide"), "odisseyprotecciones.hide"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.VISIBILITY_UNHIDE_HELP.msg(), PSL.VISIBILITY_UNHIDE_HELP_DESC.msg(), base + "unhide"), "odisseyprotecciones.unhide"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.TOGGLE_HELP.msg(), PSL.TOGGLE_HELP_DESC.msg(), base + "toggle"), "odisseyprotecciones.toggle"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.VIEW_HELP.msg(), PSL.VIEW_HELP_DESC.msg(), base + "view"), "odisseyprotecciones.view"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.UNCLAIM_HELP.msg(), PSL.UNCLAIM_HELP_DESC.msg(), base + "unclaim"), "odisseyprotecciones.unclaim"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.PRIORITY_HELP.msg(), PSL.PRIORITY_HELP_DESC.msg(), base + "priority"), "odisseyprotecciones.priority"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.REGION_HELP.msg(), PSL.REGION_HELP_DESC.msg(), base + "region"), "odisseyprotecciones.region"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.ADMIN_HELP.msg(), PSL.ADMIN_HELP_DESC.msg(), base + "admin"), "odisseyprotecciones.admin"));
+        helpMenu.add(new HelpEntry(sendWithPerm(PSL.RELOAD_HELP.msg(), PSL.RELOAD_HELP_DESC.msg(), base + "reload"), "odisseyprotecciones.admin"));
+    }
+
+    @Override
+    public List<String> getNames() {
+        return Collections.singletonList("help");
+    }
+
+    @Override
+    public boolean allowNonPlayersToExecute() {
+        return false;
+    }
+
+    @Override
+    public List<String> getPermissionsToExecute() {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, Boolean> getRegisteredFlags() {
+        return null;
+    }
+
+    private static final int GUI_SIZE = 16;
+
+    @Override
+    public boolean executeArgument(CommandSender p, String[] args, HashMap<String, String> flags) {
+        int page = 0;
+        if (args.length > 1 && MiscUtil.isValidInteger(args[1])) {
+            page = Integer.parseInt(args[1]) - 1;
+        }
+
+        List<TextComponent> entries = new ArrayList<>();
+        for (HelpEntry he : helpMenu) {
+            // ignore blank lines
+            if (he.msg.getText().equals("")) {
+                continue;
+            }
+            // check player permissions
+            for (String perm : he.permission) {
+                if (p.hasPermission(perm)) {
+                    entries.add(he.msg);
+                    break;
+                }
+            }
+        }
+
+        TextGUI.displayGUI(p, PSL.HELP.msg(), "/" + OdisseyProtecciones.getInstance().getConfigOptions().base_command + " help %page%", page, GUI_SIZE, entries, false);
+
+        if (page >= 0 && page * GUI_SIZE + GUI_SIZE < entries.size()) {
+            PSL.msg(p, PSL.HELP_NEXT.msg().replace("%page%", page + 2 + ""));
+        }
+
+        return true;
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
+        return null;
+    }
+
+    private static TextComponent sendWithPerm(String msg, String desc, String cmd) {
+        TextComponent m = new TextComponent(msg);
+        m.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, cmd));
+        m.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(desc).create()));
+        return m;
+    }
+}

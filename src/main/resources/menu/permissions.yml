@@ -1,0 +1,44 @@
+layout-version: 4
+# ==============================================================================
+#     OdisseyProtecciones - Permisos por jugador (menu/permissions.yml)
+# ==============================================================================
+# Lista los miembros (no duenos) de la proteccion. Al hacer clic en uno se abre
+# el editor de permisos individuales (permissions-member.yml).
+# Placeholder: %player%
+# ==============================================================================
+size: 54
+title: '&7» Permisos de %region% «'
+open-sound: UI_BUTTON_CLICK
+
+filler:
+  enabled: true
+  material: BLACK_STAINED_GLASS_PANE
+  name: '&r'
+
+items:
+  member:
+    slot: auto
+    material: PLAYER_HEAD
+    head-owner: '%player%'
+    name: '&e%player%'
+    lore:
+    - '&7Edita los permisos de este'
+    - '&7jugador dentro de la proteccion.'
+    - ''
+    - '&eHaz clic para editar'
+
+  back:
+    slot: 49
+    material: ARROW
+    name: '&eVolver'
+    lore: []
+    action: back
+    sound: UI_BUTTON_CLICK
+
+  close:
+    slot: 53
+    material: BARRIER
+    name: '&cCerrar'
+    lore: []
+    action: close
+    sound: UI_BUTTON_CLICK

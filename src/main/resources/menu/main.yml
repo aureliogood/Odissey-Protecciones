@@ -1,0 +1,124 @@
+layout-version: 4
+# ==============================================================================
+#        OdisseyProtecciones - Menu Principal (menu/main.yml)
+# ==============================================================================
+# Personaliza: slot, material, nombre, lore, sonido, permiso y accion.
+# Colores: '&' y '&#RRGGBB' (hex). Acciones: open:<menu>, cmd:<comando>, close, back.
+# ==============================================================================
+size: 45
+title: '&7» Menú Principal «'
+open-sound: UI_BUTTON_CLICK
+
+filler:
+  enabled: true
+  material: BLACK_STAINED_GLASS_PANE
+  name: '&r'
+
+items:
+  header:
+    slot: 4
+    material: NETHER_STAR
+    name: '&bProtecciones'
+    lore:
+    - '&8Sistema de proteccion de terrenos'
+    - ''
+    - '&7Gestiona y protege tus zonas de'
+    - '&7forma &frapida&7, &fsegura &7y facil.'
+    - ''
+    - '&8Selecciona una opcion abajo.'
+
+  protections:
+    slot: 19
+    material: CHEST
+    name: '&aMis protecciones'
+    lore:
+    - '&7Ver y administrar todas tus'
+    - '&7regiones protegidas.'
+    - ''
+    - '&eClick para abrir'
+    action: open:protections
+    sound: UI_BUTTON_CLICK
+
+  current:
+    slot: 21
+    material: BEACON
+    name: '&bProteccion actual'
+    lore:
+    - '&7Administra la proteccion en'
+    - '&7la que te encuentras parado.'
+    - ''
+    - '&eClick para abrir'
+    action: open:manage-current
+    sound: UI_BUTTON_CLICK
+
+  homes:
+    slot: 23
+    material: ENDER_PEARL
+    name: '&dHomes'
+    lore:
+    - '&7Teletransportate a los homes'
+    - '&7de tus protecciones.'
+    - ''
+    - '&eClick para abrir'
+    action: open:homes
+    sound: UI_BUTTON_CLICK
+
+  shop:
+    slot: 25
+    material: EMERALD
+    name: '&aTienda'
+    lore:
+    - '&7Compra bloques de proteccion'
+    - '&7con dinero.'
+    - ''
+    - '&eClick para abrir'
+    action: open:shop
+    permission: odisseyprotecciones.shop
+    sound: UI_BUTTON_CLICK
+
+  refund:
+    slot: 29
+    material: SUNFLOWER
+    name: '&6Reembolsar'
+    lore:
+    - '&7Devuelve una proteccion y'
+    - '&7recibe parte de su valor.'
+    - ''
+    - '&eClick para abrir'
+    action: open:shop-refund
+    permission: odisseyprotecciones.refund
+    sound: UI_BUTTON_CLICK
+
+  help:
+    slot: 31
+    material: BOOK
+    name: '&eAyuda'
+    lore:
+    - '&7Muestra todos los comandos'
+    - '&7disponibles del plugin.'
+    - ''
+    - '&eClick para abrir'
+    action: cmd:ps help
+    sound: UI_BUTTON_CLICK
+
+  admin:
+    slot: 33
+    material: COMMAND_BLOCK
+    name: '&cAdministracion'
+    lore:
+    - '&7Herramientas de administracion'
+    - '&7para el staff del servidor.'
+    - ''
+    - '&eClick para abrir'
+    action: cmd:ps admin
+    permission: odisseyprotecciones.admin
+    sound: UI_BUTTON_CLICK
+
+  close:
+    slot: 40
+    material: BARRIER
+    name: '&cCerrar'
+    lore:
+    - '&7Cierra este menu.'
+    action: close
+    sound: UI_BUTTON_CLICK

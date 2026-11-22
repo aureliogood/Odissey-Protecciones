@@ -1,0 +1,60 @@
+layout-version: 4
+# ==============================================================================
+#          OdisseyProtecciones - Tienda de Protecciones (menu/shop.yml)
+# ==============================================================================
+# La plantilla 'block' se repite por cada bloque de proteccion configurado.
+# El icono es el propio bloque de proteccion; el nombre y el lore son los de aqui.
+# Placeholders: %alias% %type% %description% %price% %xradius% %yradius% %zradius%
+# ==============================================================================
+size: 54
+title: '&7» Tienda «'
+open-sound: UI_BUTTON_CLICK
+
+filler:
+  enabled: true
+  material: BLACK_STAINED_GLASS_PANE
+  name: '&r'
+
+items:
+  block:
+    slot: auto
+    material: ''
+    name: '&a%alias%'
+    lore:
+    - '&7%description%'
+    - ''
+    - '&7Radio: &f%xradius%x%zradius%'
+    - '&7Precio: &a$%price%'
+    - ''
+    - '&eClic para comprar.'
+
+  previous:
+    slot: 48
+    material: ARROW
+    name: '&ePagina anterior'
+    lore: []
+    action: page:prev
+    sound: UI_BUTTON_CLICK
+
+  back:
+    slot: 45
+    material: ARROW
+    name: '&eVolver'
+    lore: []
+    action: open:main
+    sound: UI_BUTTON_CLICK
+
+  close:
+    slot: 49
+    material: BARRIER
+    name: '&cSalir'
+    lore: []
+    action: close
+
+  next:
+    slot: 50
+    material: ARROW
+    name: '&aPagina siguiente'
+    lore: []
+    action: page:next
+    sound: UI_BUTTON_CLICK

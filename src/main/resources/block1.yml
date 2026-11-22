@@ -1,0 +1,295 @@
+# OdisseyProtecciones - define tu bloque de proteccion debajo
+# Usa el tipo de bloque desde aqui: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+# --------------------------------------------------------------------------------------------------
+# Si quieres usar cabezas de jugador, puedes usar "PLAYER_HEAD:nombre_jugador" (ej. "PLAYER_HEAD:Notch")
+# Para usar cabezas personalizadas necesitas el valor base64 de la cabeza. En minecraft-heads.com lo encontraras en la seccion Other bajo "Value:".
+# Para usar UUIDs como cabezas, ve a https://sessionserver.mojang.com/session/minecraft/profile/PON-TU-UUID-AQUI y copia el valor del campo "value" sin comillas.
+# Cuando tengas el valor, puedes poner el tipo como "PLAYER_HEAD:valor"
+type: "EMERALD_ORE"
+
+# Otra forma de referirse al bloque de proteccion
+# Se puede usar en /ps give y /ps get
+# Debe ser una sola palabra (sin espacios)
+alias: "64"
+
+# Descripcion del tipo de bloque de proteccion
+# Aparece en el menu de /ps get
+description: "Zona de proteccion de radio 64."
+
+# Restringe la obtencion del bloque de proteccion solo a /ps get, /ps give y recetas personalizadas.
+# Otras formas de obtenerlo (ej. minar) no funcionaran como bloque de proteccion.
+# Util para que el bloque solo se consiga en una tienda o por comando.
+# Ponlo en "false" si quieres que los jugadores puedan obtener un bloque de proteccion de forma natural
+restrict_obtaining: true
+
+# Activa o desactiva el uso de este bloque de proteccion en mundos concretos
+# El modo "blacklist" impide usar este bloque en los mundos de "worlds"
+# El modo "whitelist" permite usarlo solo en los mundos de "worlds"
+# ¡Se puede omitir con el permiso odisseyprotecciones.admin (incluido OP)!
+world_list_type: "blacklist"
+worlds:
+  - "exampleworld1"
+  - "exampleworld2"
+
+# Restringe o no la colocacion del bloque de proteccion cuando el mundo esta restringido (blacklist/whitelist)
+# El bloque se colocara normalmente, sin comportamiento de PS.
+prevent_block_place_in_restricted_world: true
+
+# Permite o no colocar el bloque en terreno salvaje.
+# Si es false, el bloque de proteccion solo podra colocarse dentro de regiones existentes.
+allow_placing_in_wild: true
+
+# Permite o no que el bloque omita la flag passthrough de WorldGuard.
+# Permite colocar el bloque de proteccion aunque WorldGuard impida colocar bloques en el salvaje.
+placing_bypasses_wg_passthrough: true
+
+region:
+  # Distancia minima entre protecciones (que no pertenezcan al mismo dueno), medida desde el bloque de proteccion al borde de otra region
+  # Probablemente tengas que cambiar esto entre bloques, ya que los tamanos de region seran distintos
+  # Ponlo en -1 para sin minimo, pero seguira comprobando regiones superpuestas
+  distance_between_claims: -1
+
+  # Radio de proteccion del bloque (radio 64 -> region de 129 x 129)
+  # Pon y_radius en -1 si quieres proteger todos los niveles de altura.
+  # y_radius debe ser -1 si permites que la region se fusione (opcion "allow_merging")
+  x_radius: 64
+  y_radius: -1
+  z_radius: 64
+
+  # Activa el "modo encaje de chunk", donde los limites de la region se determinan por el chunk donde esta el bloque
+  # y chunk_radius (a cuantos chunks de distancia del chunk central).
+  # Permite a los jugadores no preocuparse por la colocacion exacta del bloque, y evita regiones superpuestas desordenadas
+  # (ya que todas siguen los limites del chunk).
+  # Ponlo en -1 para desactivar, y cualquier numero mayor o igual a 1 para activar.
+  # Nota: ¡si se activa, x_radius y z_radius se ignoran!
+  chunk_radius: -1
+
+  # Cuantos bloques desplazar la ubicacion por defecto de /ps home respecto al bloque de proteccion
+  home_x_offset: 0.0
+  home_y_offset: 1.0
+  home_z_offset: 0.0
+
+  # Flags por defecto que se aplican al crear una region protegida.
+  # Puedes usar -g [grupo] antes de la flag para flags de grupo (ej. -g members pvp deny).
+  # Puedes usar placeholders de PlaceholderAPI en flags de texto (ej. greeting, farewell).
+  flags:
+    - "pvp deny"
+    - "tnt deny"
+    - "greeting &7Has entrado a la zona protegida de &b&l%player%&7."
+    - "farewell &7Has salido de la zona protegida de &b&l%player%&7."
+    - "greeting-action &7Entrando a la zona de &b%player%"
+    - "farewell-action &7Saliendo de la zona de &b%player%"
+    - "creeper-explosion deny"
+    - "wither-damage deny"
+    - "ghast-fireball deny"
+
+  # Lista de todas las flags que pueden establecer los duenos de la region.
+  # Si quieres permitir tambien grupos, usa -g (ej. "-g all,members pvp" lo restringe a sin flag de grupo, y al grupo members)
+  # "-g all pvp" - Impide que los jugadores pongan el grupo en nonmembers y sean invulnerables a ataques.
+  allowed_flags:
+    - "-g all pvp"
+    - "greeting"
+    - "greeting-action"
+    - "farewell"
+    - "farewell-action"
+    - "mob-spawning"
+    - "creeper-explosion"
+    - "wither-damage"
+    - "ghast-fireball"
+
+  # Flags que ocultar en /ps info
+  hidden_flags_from_info:
+    - "ps-name"
+    - "ps-merged-regions"
+    - "ps-merged-regions-types"
+    - "ps-block-material"
+    - "ps-price"
+    - "ps-landlord"
+    - "ps-tenant"
+    - "ps-rent-period"
+    - "ps-rent-last-paid"
+    - "ps-for-sale"
+    - "ps-rent-settings"
+    - "ps-tax-payments-due"
+    - "ps-tax-last-payment-added"
+    - "ps-tax-autopayer"
+    - "ps-member-perms"
+    - "ps-hologram"
+    - "ps-hologram-click"
+
+  # Tipo de prioridad por defecto para este tipo de bloque de proteccion
+  priority: 0
+
+  # Permite o no crear regiones que se superpongan con otras que no posees
+  # Esto es peligroso, piensalo bien si lo pones en true.
+  allow_overlap_unowned_regions: false
+
+  # Permite o no que los jugadores creen otras regiones que se superpongan con esta.
+  # "owner" - solo los duenos pueden superponerse a esta (por defecto)
+  # "member" - permitir a miembros y duenos superponerse con este tipo de region (util para parcelas de ciudad)
+  # "all" - permitir a todos los jugadores superponerse con este tipo de region.
+  # "none" - ningun jugador, ni siquiera los duenos de la region, pueden superponerse
+  # allow_overlap_unowned_regions no necesita ser true para que esto funcione.
+  allow_other_regions_to_overlap: "owner"
+
+  # Permite o no que las regiones creadas con este bloque se fusionen con otras regiones
+  # allow_merging_regions debe estar en true en config.yml
+  allow_merging: true
+
+  # Tipos de region permitidos para fusionarse (referidos por alias)
+  # Asegurate de anadir el alias de este tipo de region para permitir fusionarte con el, ej. ["64"]
+  # Anade "all" si quieres permitir que esta region se fusione con cualquier region
+  allowed_merging_into_types:
+    - "all"
+
+block_data:
+  # Nombre que recibe el bloque de proteccion al obtenerlo con /ps give o /ps get
+  # Tambien afecta a los objetos crafteados (ver custom_recipe)
+  # Deja '' para sin nombre
+  display_name: "&a&m<---&r&b Bloque de Proteccion 64 &r&a&m--->"
+
+  # Lore del bloque de proteccion al obtenerlo con /ps give o /ps get
+  # Tambien afecta a los objetos crafteados (ver custom_recipe)
+  # Deja [] para sin lore
+  lore:
+    - "&6(⌐■_■)ノ♪ ¡Nadie va a tocar mis cosas!"
+
+  # Si el objeto debe tener aspecto de "brillo/encantado" en el inventario del jugador.
+  enchanted_effect: false
+
+  # Anade precio al usar /ps get
+  # Debe haber plugin de economia compatible (requiere Vault, ej. Essentials)
+  # Debe ser decimal (ej. no 10, sino 10.0)
+  price: 0.0
+
+  # Permite o no craftear este objeto con una receta personalizada
+  # Util para permitir craftear el objeto cuando restrict_obtaining esta en true
+  allow_craft_with_custom_recipe: false
+  # Especifica la receta personalizada debajo
+  # Debes rellenar los huecos con nombres de aqui: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+  # Tambien puedes usar otros bloques de proteccion como ingredientes, con el formato ODISSEY_PROTECCIONES:alias
+  # Asegurate de poner allow_use_in_crafting en true para ese bloque, o no podras usarlo en el crafteo
+  # Si quieres aire, deja el hueco como ""
+  custom_recipe:
+    - ["", "STONE", ""]
+    - ["STONE", "EMERALD", "STONE"]
+    - ["", "STONE", ""]
+  # Cantidad del objeto de proteccion a dar al craftear
+  recipe_amount: 1
+
+  # Custom model data del objeto, util para resource packs. Ponlo en -1 para desactivar.
+  custom_model_data: -1
+
+economy:
+  # Los impuestos deben estar activados primero en config.yml (tax_enabled)
+  # Cantidad a cobrar a la region por ciclo de impuesto.
+  # Debe ser decimal (ej. no 10, sino 10.0)
+  tax_amount: 0.0
+
+  # Cantidad de segundos entre ciclos de impuesto. Ponlo en -1 para desactivar impuestos.
+  tax_period: -1
+
+  # Tiempo para pagar impuestos en segundos tras el ciclo antes de que haya castigo.
+  tax_payment_time: 86400
+
+  # Establece automaticamente al jugador que creo la region como pagador de impuestos.
+  start_with_tax_autopay: true
+
+  # Como que rol se anaden los inquilinos (para alquileres). Puede ser "owner" o "member".
+  tenant_rent_role: "member"
+
+  # ¿Los arrendadores de regiones alquiladas siguen siendo duenos mientras estan alquiladas?
+  landlord_still_owner: false
+
+behaviour:
+  # ¿Ocultar el bloque de proteccion nada mas colocarlo?
+  auto_hide: false
+
+  # Fusionar automaticamente con otras regiones al colocar si solo hay una superpuesta y allow_merging es true
+  auto_merge: false
+
+  # ¿Desactivar la devolucion del bloque al eliminarlo/reclamarlo?
+  no_drop: false
+
+  # Impide que un piston empuje el bloque. Recomendado dejarlo en true.
+  prevent_piston_push: true
+
+  # Impide que el bloque sea destruido al explotar.
+  # Recomendado dejarlo en true para evitar que los jugadores consigan mas bloques de proteccion con /ps unhide (cuando se destruye el bloque)
+  prevent_explode: true
+
+  # Impide que el bloque sea destruido al explotar cargas de viento; tambien afecta a explosiones del encantamiento wind_burst.
+  # Recomendado dejarlo en true si no quieres prohibir todas las explosiones, pero no quieres que la region explote con este metodo
+  prevent_wind_charge_explode: true
+
+  # Destruye la region de proteccion cuando el bloque explota. Util para servidores PVP/Factions.
+  # prevent_explode debe ser false para que esto funcione.
+  destroy_region_when_explode: false
+
+  # Silk Touch: si es true, los bloques de mineral configurados tambien por OdisseyProtecciones no permitiran drops con Silk Touch
+  # Este era el comportamiento antiguo para impedir obtener el bloque de proteccion de forma natural.
+  # Recomendado dejarlo en false si "Restringir obtencion" (la forma nueva) esta en true
+  prevent_silk_touch: false
+
+  # Coste al colocar un bloque de proteccion (aparte del coste de /ps get)
+  cost_to_place: 0.0
+
+  # Permitir fundir el objeto de proteccion en hornos
+  allow_smelt_item: false
+
+  # Permite usar el bloque de proteccion en recetas de crafteo
+  # Puede que quieras ponerlo en false para evitar que los jugadores descompongan sus elementos
+  allow_use_in_crafting: false
+
+player:
+  # Permite o no romper el bloque de proteccion con shift-click derecho
+  # Util si el bloque de proteccion es indestructible (bedrock, command block), etc.
+  allow_shift_right_break: false
+
+  # Evita o no teletransportarse a una region protegida si el jugador no es su dueno (excepto con perla de ender y fruta coral)
+  # No impide entrar; usa la flag "entry deny" para impedir la entrada.
+  # Se omite con odisseyprotecciones.tp.bypassprevent
+  prevent_teleport_in: false
+
+  # No puedes moverte durante x segundos antes de teletransportarte con /ps home o /ps tp. Se puede desactivar con 0.
+  # Opcion de teletransportar solo si el jugador esta quieto.
+  # Se omite con el permiso odisseyprotecciones.tp.bypasswait
+  no_moving_when_tp_waiting: true
+  tp_waiting_seconds: 0
+
+  # Evita o no obtener este bloque mediante /ps get.
+  # Se omite con odisseyprotecciones.admin
+  prevent_ps_get: false
+
+  # Evita o no que este tipo de region aparezca en /ps home y permita teletransporte.
+  # Nota: los admins pueden seguir usando /ps tp a este tipo de region
+  prevent_ps_home: false
+
+  # Permiso extra requerido para colocar este bloque de proteccion concreto (aun necesitas odisseyprotecciones.create)
+  # Tambien aplica a /ps get (aun necesitas odisseyprotecciones.get)
+  # '' para sin permiso extra
+  permission: ""
+
+event:
+  # Seccion de eventos
+  # ~~~~~~~~~~~~~~
+  # Cada linea de eventos tiene el formato 'tipo: accion'
+  # Los tipos aceptados son:
+  # player_command - Ejecuta un comando como el jugador que provoco el evento (no se ejecuta si no aplica)
+  # console_command - Ejecuta un comando desde la consola
+  # message - Envia un mensaje al jugador o consola si aplica (soporta colores con &)
+  # global_message - Envia un mensaje a todos los jugadores y consola (soporta colores con &)
+  # console_message - Envia un mensaje a la consola (soporta colores con &)
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Activa o no el seguimiento de eventos (los eventos de la API siguen activos)
+  enable: false
+
+  # Ejecuta comandos al crear una region (ej. un jugador coloca un bloque de proteccion)
+  # Variables: %player%, %world%, %region%, %block_x%, %block_y%, %block_z%
+  on_region_create:
+    - "global_message: &l%player% creo la region %region%!"
+
+  # Ejecuta comandos al destruir una region (ej. cuando el jugador destruye el bloque de proteccion)
+  # Variables: %player%, %world%, %region%, %block_x%, %block_y%, %block_z%
+  on_region_destroy:
+    - "console_command: say %player% ha destruido la region %region%!"

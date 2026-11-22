@@ -1,0 +1,33 @@
+layout-version: 4
+# ==============================================================================
+#        OdisseyProtecciones - Confirmacion (menu/confirm.yml)
+# ==============================================================================
+# Menu generico de confirmacion usado para acciones destructivas.
+# ==============================================================================
+size: 27
+title: '&7» Confirmar acción «'
+open-sound: UI_BUTTON_CLICK
+
+filler:
+  enabled: true
+  material: BLACK_STAINED_GLASS_PANE
+  name: '&r'
+
+items:
+  confirm:
+    slot: 11
+    material: LIME_CONCRETE
+    name: '&aConfirmar'
+    lore:
+    - '&7Esta accion no se puede deshacer.'
+    action: confirm
+    sound: UI_BUTTON_CLICK
+
+  cancel:
+    slot: 15
+    material: RED_CONCRETE
+    name: '&cCancelar'
+    lore:
+    - '&7Volver sin hacer cambios.'
+    action: cancel
+    sound: UI_BUTTON_CLICK

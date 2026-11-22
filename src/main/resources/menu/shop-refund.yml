@@ -1,0 +1,66 @@
+layout-version: 4
+# ==============================================================================
+#      OdisseyProtecciones - Reembolsar Protecciones (menu/shop-refund.yml)
+# ==============================================================================
+# La plantilla 'protection' se repite por cada proteccion reembolsable:
+# regiones colocadas por el jugador y bloques de proteccion en su inventario.
+# Placeholders: %region% %type% %protection_name% %world% %x% %y% %z%
+#               %price% %percentage% %amount% %source% %inventory_slot%
+# ==============================================================================
+size: 54
+title: '&7» Reembolsos «'
+open-sound: UI_BUTTON_CLICK
+
+filler:
+  enabled: true
+  material: BLACK_STAINED_GLASS_PANE
+  name: '&r'
+
+items:
+  protection:
+    slot: auto
+    material: EMERALD_BLOCK
+    name: '&e%region%'
+    lore:
+    - '&7Tipo: &f%type%'
+    - '&7Origen: &f%source%'
+    - '&7Mundo: &f%world%'
+    - '&7Ubicacion: &f%x%, %y%, %z%'
+    - ''
+    - '&7Valor original: &a$%price%'
+    - '&7Reembolso: &e%percentage%%'
+    - '&7Recibiras: &a$%amount%'
+    - ''
+    - '&eClic para continuar.'
+
+  empty:
+    slot: 22
+    material: PAPER
+    name: '&7Sin protecciones reembolsables'
+    lore:
+    - '&7No tienes protecciones colocadas'
+    - '&7ni bloques en el inventario con reembolso.'
+    action: noop
+
+  previous:
+    slot: 45
+    material: ARROW
+    name: '&ePagina anterior'
+    lore: []
+    action: page:prev
+    sound: UI_BUTTON_CLICK
+
+  back:
+    slot: 49
+    material: BARRIER
+    name: '&cVolver a la tienda'
+    lore: []
+    action: open:shop
+
+  next:
+    slot: 53
+    material: ARROW
+    name: '&aPagina siguiente'
+    lore: []
+    action: page:next
+    sound: UI_BUTTON_CLICK

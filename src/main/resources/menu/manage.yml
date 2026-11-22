@@ -1,0 +1,148 @@
+layout-version: 4
+# ==============================================================================
+#     OdisseyProtecciones - Gestion de Proteccion (menu/manage.yml)
+# ==============================================================================
+# Placeholders: %region% %id% %world% %x% %y% %z% %radius% %owner% %members%
+# %owners% %hidden% %size_x% %size_z% %size_y%
+# Acciones: home:tp, block:tp, hide:toggle, rename, delete, flags, open:<menu>
+# ==============================================================================
+size: 54
+title: '&7» %region% «'
+open-sound: UI_BUTTON_CLICK
+
+filler:
+  enabled: true
+  material: BLACK_STAINED_GLASS_PANE
+  name: '&r'
+
+items:
+  info:
+    slot: 4
+    material: PLAYER_HEAD
+    head-owner: '%owner%'
+    name: '&b%region%'
+    lore:
+    - '&8Propietario: &f%owner%'
+    - '&8ID: &f%id%'
+    - ''
+    - '&7Mundo: &f%world%'
+    - '&7Bloque: &f%x%&7, &f%y%&7, &f%z%'
+    - '&7Radio: &f%radius%'
+    - '&7Miembros: &f%members%'
+    - '&7Oculto: &f%hidden%'
+
+  home:
+    slot: 20
+    material: ENDER_PEARL
+    name: '&dIr al home'
+    lore:
+    - '&7Teletransportate al home'
+    - '&7de esta proteccion.'
+    - ''
+    - '&eClick para viajar'
+    action: home:tp
+    sound: UI_BUTTON_CLICK
+
+  block:
+    slot: 21
+    material: COMPASS
+    name: '&aIr al bloque'
+    lore:
+    - '&7Teletransportate al bloque'
+    - '&7protector.'
+    - ''
+    - '&eClick para viajar'
+    action: block:tp
+    sound: UI_BUTTON_CLICK
+
+  members:
+    slot: 22
+    material: PLAYER_HEAD
+    name: '&eMiembros'
+    lore:
+    - '&7Administra los duenos y'
+    - '&7miembros de la proteccion.'
+    - ''
+    - '&eClick para abrir'
+    action: open:members
+    sound: UI_BUTTON_CLICK
+
+  flags:
+    slot: 23
+    material: REPEATER
+    name: '&6Flags'
+    lore:
+    - '&7Configura las flags de la'
+    - '&7proteccion.'
+    - ''
+    - '&8(Debes estar en la proteccion)'
+    - '&eClick para abrir'
+    action: flags
+    sound: UI_BUTTON_CLICK
+
+  permissions:
+    slot: 26
+    material: PAPER
+    name: '&dPermisos por jugador'
+    lore:
+    - '&7Configura que puede hacer'
+    - '&7cada miembro dentro de'
+    - '&7la proteccion.'
+    - ''
+    - '&eClick para abrir'
+    action: open:permissions
+    sound: UI_BUTTON_CLICK
+
+  rename:
+    slot: 24
+    material: NAME_TAG
+    name: '&aRenombrar'
+    lore:
+    - '&7Cambia el nombre de esta'
+    - '&7proteccion.'
+    - ''
+    - '&eClick para renombrar'
+    action: rename
+    sound: UI_BUTTON_CLICK
+
+  hide:
+    slot: 25
+    material: ENDER_EYE
+    name: '&bBloque visible'
+    lore:
+    - '&7Estado actual: &f%hidden%'
+    - ''
+    - '&eClick para alternar'
+    action: hide:toggle
+    sound: UI_BUTTON_CLICK
+
+  delete:
+    slot: 40
+    material: TNT
+    name: '&cEliminar proteccion'
+    lore:
+    - '&7Elimina esta proteccion de'
+    - '&7forma permanente.'
+    - ''
+    - '&8Requiere confirmacion.'
+    - '&eClick para eliminar'
+    action: delete
+    sound: UI_BUTTON_CLICK
+
+  back:
+    slot: 48
+    material: ARROW
+    name: '&eVolver'
+    lore:
+    - '&7Regresa al menu anterior.'
+    action: back
+    sound: UI_BUTTON_CLICK
+
+  close:
+    slot: 50
+    material: BARRIER
+    name: '&cCerrar'
+    lore:
+    - '&7Cierra este menu.'
+    action: close
+    sound: UI_BUTTON_CLICK

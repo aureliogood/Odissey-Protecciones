@@ -1,0 +1,54 @@
+layout-version: 4
+# ==============================================================================
+#   OdisseyProtecciones - Selector de Jugadores (menu/player-selector.yml)
+# ==============================================================================
+# Plantilla 'player' repetida por cada jugador conectado que se puede anadir.
+# Placeholder: %player%
+# ==============================================================================
+size: 54
+title: '&7» Seleccionar jugador «'
+open-sound: UI_BUTTON_CLICK
+
+filler:
+  enabled: true
+  material: BLACK_STAINED_GLASS_PANE
+  name: '&r'
+
+items:
+  player:
+    slot: auto
+    material: PLAYER_HEAD
+    head-owner: '%player%'
+    name: '&b%player%'
+    lore:
+    - '&7Haz clic para seleccionar.'
+
+  previous:
+    slot: 45
+    material: ARROW
+    name: '&eAnterior'
+    lore: []
+    action: page:prev
+    sound: UI_BUTTON_CLICK
+
+  close:
+    slot: 48
+    material: OAK_DOOR
+    name: '&cCerrar'
+    lore: []
+    action: close
+
+  back:
+    slot: 49
+    material: BARRIER
+    name: '&cVolver'
+    lore: []
+    action: back
+
+  next:
+    slot: 53
+    material: ARROW
+    name: '&aSiguiente'
+    lore: []
+    action: page:next
+    sound: UI_BUTTON_CLICK

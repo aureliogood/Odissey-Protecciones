@@ -1,0 +1,45 @@
+layout-version: 4
+# ==============================================================================
+#  OdisseyProtecciones - Confirmar Reembolso (menu/shop-refund-confirm.yml)
+# ==============================================================================
+# Menu de confirmacion del reembolso. Usa los mismos placeholders que
+# shop-refund.yml (%region% %price% %percentage% %amount%).
+# ==============================================================================
+size: 27
+title: '&7» Confirmar reembolso «'
+open-sound: UI_BUTTON_CLICK
+
+filler:
+  enabled: true
+  material: BLACK_STAINED_GLASS_PANE
+  name: '&r'
+
+items:
+  confirm:
+    slot: 11
+    material: LIME_CONCRETE
+    name: '&aConfirmar reembolso'
+    lore:
+    - '&7Reembolsaras la proteccion &f%region%&7.'
+    - '&7Recibiras: &a$%amount%'
+    - '&cEsta accion no se puede deshacer.'
+    action: confirm
+    sound: UI_BUTTON_CLICK
+
+  protection:
+    slot: 13
+    material: EMERALD_BLOCK
+    name: '&e%region%'
+    lore:
+    - '&7Valor original: &a$%price%'
+    - '&7Porcentaje: &e%percentage%%'
+    - '&7Pago final: &a$%amount%'
+
+  cancel:
+    slot: 15
+    material: RED_CONCRETE
+    name: '&cCancelar'
+    lore:
+    - '&7Volver sin reembolsar.'
+    action: cancel
+    sound: UI_BUTTON_CLICK

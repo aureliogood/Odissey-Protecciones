@@ -1,0 +1,68 @@
+layout-version: 4
+# ==============================================================================
+#      OdisseyProtecciones - Lista de Protecciones (menu/protections.yml)
+# ==============================================================================
+# El item 'entry' es la plantilla repetida por cada proteccion del jugador.
+# Los slots disponibles se calculan automaticamente (los que no usa el menu).
+# Placeholders: %region% %id% %world% %x% %y% %z% %radius% %members% %owner%
+# ==============================================================================
+size: 54
+title: '&7» Mis protecciones «'
+open-sound: UI_BUTTON_CLICK
+
+filler:
+  enabled: true
+  material: BLACK_STAINED_GLASS_PANE
+  name: '&r'
+
+items:
+  header:
+    slot: 4
+    material: COMPASS
+    name: '&bMis protecciones'
+    lore:
+    - '&7Tus terrenos protegidos'
+    - '&8Selecciona uno para administrarlo.'
+  entry:
+    slot: auto
+    material: EMERALD_BLOCK
+    name: '&a%region%'
+    lore:
+    - '&7ID: &f%id%'
+    - '&7Mundo: &f%world%'
+    - '&7Bloque: &f%x%, %y%, %z%'
+    - '&7Radio: &f%radius%'
+    - '&7Dueno: &f%owner%'
+    - '&7Miembros: &f%members%'
+    - ''
+    - '&eHaz clic para administrar.'
+
+  previous:
+    slot: 45
+    material: ARROW
+    name: '&eAnterior'
+    lore: []
+    action: page:prev
+    sound: UI_BUTTON_CLICK
+
+  close:
+    slot: 50
+    material: OAK_DOOR
+    name: '&cCerrar'
+    lore: []
+    action: close
+
+  back:
+    slot: 48
+    material: BARRIER
+    name: '&cVolver'
+    lore: []
+    action: open:main
+
+  next:
+    slot: 53
+    material: ARROW
+    name: '&aSiguiente'
+    lore: []
+    action: page:next
+    sound: UI_BUTTON_CLICK

@@ -1,0 +1,127 @@
+name: OdisseyProtecciones
+version: ${version}
+authors: [ocampo05]
+
+depend: [WorldGuard, WorldEdit]
+softdepend: [Vault, PlaceholderAPI, LuckPerms]
+main: es.odissey.protecciones.OdisseyProtecciones
+api-version: 1.21
+
+permissions:
+  odisseyprotecciones.create:
+    description: Proteger una region colocando un bloque de proteccion.
+    default: op
+  odisseyprotecciones.destroy:
+    description: Permite a los jugadores eliminar sus propias regiones protegidas (romper el bloque).
+    default: op
+  odisseyprotecciones.unclaim:
+    description: Permite reclamar (quitar) su region con /ps unclaim.
+    default: op
+  odisseyprotecciones.unclaim.remote:
+    description: Permite quitar su region de forma remota con /ps unclaim [list|region-id].
+    default: op
+  odisseyprotecciones.view:
+    description: Permite usar /ps view en sus propias regiones.
+    default: op
+  odisseyprotecciones.view.others:
+    description: Permite usar /ps view en regiones de las que no forma parte.
+    default: op
+  odisseyprotecciones.info:
+    description: Permite usar /ps info.
+    default: op
+  odisseyprotecciones.info.others:
+    description: Permite usar /ps info en regiones sin dueno.
+    default: op
+  odisseyprotecciones.get:
+    description: Permite usar /ps get.
+    default: op
+  odisseyprotecciones.give:
+    description: Permite usar /ps give (dar bloques de proteccion a otros como admin).
+    default: op
+  odisseyprotecciones.count:
+    description: Permite usar /ps count.
+    default: op
+  odisseyprotecciones.count.others:
+    description: Permite usar /ps count [jugador].
+    default: op
+  odisseyprotecciones.list:
+    description: Permite usar /ps list.
+    default: op
+  odisseyprotecciones.list.others:
+    description: Permite usar /ps list [jugador].
+    default: op
+  odisseyprotecciones.hide:
+    description: Permite ocultar su bloque de proteccion.
+    default: op
+  odisseyprotecciones.unhide:
+    description: Permite mostrar su bloque de proteccion.
+    default: op
+  odisseyprotecciones.setparent:
+    description: Permite acceder a /ps setparent.
+    default: op
+  odisseyprotecciones.setparent.others:
+    description: Permite heredar propiedades de regiones que no posee.
+    default: op
+  odisseyprotecciones.name:
+    description: Acceso al comando /ps name.
+    default: op
+  odisseyprotecciones.transfer:
+    description: Permite transferir sus protecciones a otro jugador con /ps transfer.
+    default: op
+  odisseyprotecciones.home:
+    description: Acceso al comando /ps home.
+    default: op
+  odisseyprotecciones.sethome:
+    description: Acceso a /ps sethome.
+    default: op
+  odisseyprotecciones.tp:
+    description: Acceso al comando /ps tp.
+    default: op
+  odisseyprotecciones.tp.bypasswait:
+    description: Ignorar el tiempo de espera configurado para /ps home y /ps tp.
+    default: op
+  odisseyprotecciones.tp.bypassprevent:
+    description: Ignorar la opcion prevent_teleport_in de la configuracion.
+    default: op
+  odisseyprotecciones.priority:
+    description: Permite establecer la prioridad de su region.
+    default: op
+  odisseyprotecciones.owners:
+    description: Permite agregar o quitar duenos de la region. Permite usar /ps info owners.
+    default: op
+  odisseyprotecciones.members:
+    description: Permite agregar o quitar miembros de la region. Permite usar /ps info members.
+    default: op
+  odisseyprotecciones.flags:
+    description: Permite establecer las flags de su region.
+    default: op
+  odisseyprotecciones.rent:
+    description: Permite usar el comando /ps rent.
+    default: op
+  odisseyprotecciones.buysell:
+    description: Permite acceder a /ps buy y /ps sell.
+    default: op
+  odisseyprotecciones.tax:
+    description: Permite acceder a los comandos /ps tax.
+    default: op
+  odisseyprotecciones.toggle:
+    description: Permite activar/desactivar la colocacion de bloques de proteccion.
+    default: op
+  odisseyprotecciones.region:
+    description: Permite usar los comandos /ps region.
+    default: op
+  odisseyprotecciones.merge:
+    description: Permite fusionar sus regiones con otras regiones que posea.
+    default: op
+  odisseyprotecciones.admin:
+    description: Permite ignorar todas las regiones de OdisseyProtecciones y usar /ps admin y /ps reload.
+    default: op
+  odisseyprotecciones.superowner:
+    description: Permite ignorar los permisos de region.
+    default: op
+  odisseyprotecciones.shop:
+    description: Permite abrir la tienda de protecciones (/ps shop).
+    default: op
+  odisseyprotecciones.refund:
+    description: Permite reembolsar protecciones (/ps shop reembolsar).
+    default: op

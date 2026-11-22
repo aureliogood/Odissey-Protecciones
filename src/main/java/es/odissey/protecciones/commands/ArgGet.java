@@ -1,0 +1,147 @@
+package es.odissey.protecciones.commands;
+
+import es.odissey.protecciones.PSPlayer;
+import es.odissey.protecciones.PSProtectBlock;
+import es.odissey.protecciones.PSL;
+import es.odissey.protecciones.OdisseyProtecciones;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
+
+import java.text.DecimalFormat;
+import java.util.*;
+
+public class ArgGet implements PSCommandArg {
+
+    @Override
+    public List<String> getNames() {
+        return Collections.singletonList("get");
+    }
+
+    @Override
+    public boolean allowNonPlayersToExecute() {
+        return false;
+    }
+
+    @Override
+    public List<String> getPermissionsToExecute() {
+        return Collections.singletonList("odisseyprotecciones.get");
+    }
+
+    @Override
+    public HashMap<String, Boolean> getRegisteredFlags() {
+        return null;
+    }
+
+    private boolean openGetGUI(Player p) {
+        PSL.msg(p, PSL.GET_HEADER.msg());
+        for (PSProtectBlock b : OdisseyProtecciones.getInstance().getConfiguredBlocks()) {
+            if ((!b.permission.equals("") && !p.hasPermission(b.permission)) || (b.preventPsGet && !p.hasPermission("odisseyprotecciones.admin"))) {
+                continue; // no permission
+            }
+
+            String price = new DecimalFormat("#.##").format(b.price);
+
+            TextComponent tc = new TextComponent(PSL.GET_GUI_BLOCK.msg()
+                    .replace("%alias%", b.alias)
+                    .replace("%price%", price)
+                    .replace("%description%", b.description)
+                    .replace("%xradius%", ""+b.xRadius)
+                    .replace("%yradius%", ""+b.yRadius)
+                    .replace("%zradius%", ""+b.zRadius));
+
+            tc.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(PSL.GET_GUI_HOVER.msg()
+                    .replace("%alias%", b.alias)
+                    .replace("%price%", price)
+                    .replace("%description%", b.description)
+                    .replace("%xradius%", ""+b.xRadius)
+                    .replace("%yradius%", ""+b.yRadius)
+                    .replace("%zradius%", ""+b.zRadius)).create()));
+            tc.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + OdisseyProtecciones.getInstance().getConfigOptions().base_command + " get " + b.alias));
+
+            p.spigot().sendMessage(tc);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean executeArgument(CommandSender s, String[] args, HashMap<String, String> flags) {
+        Player p = (Player) s;
+        PSPlayer psp = PSPlayer.fromPlayer(p);
+        if (!p.hasPermission("odisseyprotecciones.get"))
+            return PSL.msg(p, PSL.NO_PERMISSION_GET.msg());
+
+        // /ps get (for GUI)
+        if (args.length == 1) return openGetGUI(p);
+
+        if (args.length != 2)
+            return PSL.msg(p, PSL.GET_HELP.msg());
+
+        // check if argument is valid block
+        PSProtectBlock cp = OdisseyProtecciones.getProtectBlockFromAlias(args[1]);
+        if (cp == null)
+            return PSL.msg(p, PSL.INVALID_BLOCK.msg());
+
+        // check for block permission (custom)
+        if (!cp.permission.equals("") && !p.hasPermission(cp.permission))
+            return PSL.msg(p, PSL.GET_NO_PERMISSION_BLOCK.msg());
+
+        // check if /ps get is disabled on this
+        if (cp.preventPsGet && !p.hasPermission("odisseyprotecciones.admin"))
+            return PSL.msg(p, PSL.GET_NO_PERMISSION_BLOCK.msg());
+
+        // check if player has enough money
+        if (OdisseyProtecciones.getInstance().isVaultSupportEnabled() && cp.price != 0 && !psp.hasAmount(cp.price))
+            return PSL.msg(p, PSL.NOT_ENOUGH_MONEY.msg().replace("%price%", String.format("%.2f", cp.price)));
+
+        // debug message
+        if (!OdisseyProtecciones.getInstance().isVaultSupportEnabled() && cp.price != 0) {
+            Bukkit.getLogger().info("Vault no esta habilitado pero hay un precio establecido en el bloque de proteccion! No funcionara!");
+        }
+
+        // take money
+        if (OdisseyProtecciones.getInstance().isVaultSupportEnabled() && cp.price != 0) {
+            EconomyResponse er = psp.withdrawBalance(cp.price);
+            if (!er.transactionSuccess()) {
+                return PSL.msg(p, er.errorMessage);
+            }
+        }
+
+        // check if item was able to be added (inventory not full)
+        if (!p.getInventory().addItem(cp.createItem()).isEmpty()) {
+            if (OdisseyProtecciones.getInstance().getConfigOptions().dropItemWhenInventoryFull) { // drop on floor
+                PSL.msg(p, PSL.NO_ROOM_DROPPING_ON_FLOOR.msg());
+                p.getWorld().dropItem(p.getLocation(), cp.createItem());
+            } else { // cancel event
+                PSL.msg(p, PSL.NO_ROOM_IN_INVENTORY.msg());
+                if (OdisseyProtecciones.getInstance().isVaultSupportEnabled()) {
+                    EconomyResponse er = psp.depositBalance(cp.price);
+                    if (!er.transactionSuccess()) {
+                        return PSL.msg(p, er.errorMessage);
+                    }
+                }
+            }
+            return true;
+        }
+
+        return PSL.msg(p, PSL.GET_GOTTEN.msg());
+    }
+
+    // tab completion
+    @Override
+    public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
+        List<String> l = new ArrayList<>();
+        for (PSProtectBlock b : OdisseyProtecciones.getInstance().getConfiguredBlocks()) {
+            if ((!b.permission.equals("") && !sender.hasPermission(b.permission)) || (b.preventPsGet && !sender.hasPermission("odisseyprotecciones.admin"))) continue; // no permission
+            l.add(b.alias);
+        }
+        return args.length == 2 ? StringUtil.copyPartialMatches(args[1], l, new ArrayList<>()) : null;
+    }
+
+}

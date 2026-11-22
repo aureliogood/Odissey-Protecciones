@@ -1,0 +1,188 @@
+package es.odissey.protecciones.commands;
+
+import es.odissey.protecciones.*;
+import es.odissey.protecciones.utils.ChatUtil;
+import es.odissey.protecciones.utils.UUIDCache;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
+
+import java.util.*;
+
+public class ArgTp implements PSCommandArg {
+
+    private static HashMap<UUID, Integer> waitCounter = new HashMap<>();
+    private static HashMap<UUID, BukkitTask> taskCounter = new HashMap<>();
+
+    // /ps tp, /ps home
+
+    @Override
+    public List<String> getNames() {
+        return Collections.singletonList("tp");
+    }
+
+    @Override
+    public boolean allowNonPlayersToExecute() {
+        return false;
+    }
+
+    @Override
+    public List<String> getPermissionsToExecute() {
+        return Collections.singletonList("odisseyprotecciones.tp");
+    }
+
+    @Override
+    public HashMap<String, Boolean> getRegisteredFlags() {
+        return null;
+    }
+
+    @Override
+    public boolean executeArgument(CommandSender s, String[] args, HashMap<String, String> flags) {
+        Player p = (Player) s;
+
+        // preliminary checks
+        if (!p.hasPermission("odisseyprotecciones.tp"))
+            return PSL.msg(p, PSL.NO_PERMISSION_TP.msg());
+
+        if (args.length < 2 || args.length > 3)
+            return PSL.msg(p, PSL.TP_HELP.msg());
+
+        if (args.length == 2) { // /ps tp [name/id]
+            Bukkit.getScheduler().runTask(OdisseyProtecciones.getInstance(), () -> {
+                // get regions from the query
+                List<PSRegion> regions = OdisseyProtecciones.getPSRegions(p.getWorld(), args[1]);
+
+                if (regions.isEmpty()) {
+                    PSL.msg(s, PSL.REGION_DOES_NOT_EXIST.msg());
+                    return;
+                }
+                if (regions.size() > 1) {
+                    ChatUtil.displayDuplicateRegionAliases(p, regions);
+                    return;
+                }
+                teleportPlayer(p, regions.get(0));
+            });
+        } else { // /ps tp [player] [num]
+            // get the region id the player wants to teleport to
+            int regionNumber;
+            try {
+                regionNumber = Integer.parseInt(args[2]);
+                if (regionNumber <= 0) {
+                    return PSL.msg(p, PSL.NUMBER_ABOVE_ZERO.msg());
+                }
+            } catch (NumberFormatException e) {
+                return PSL.msg(p, PSL.TP_VALID_NUMBER.msg());
+            }
+
+            String tpName = args[1];
+            // region checks, and set lp to offline player
+            if (!UUIDCache.containsName(tpName)) {
+                return PSL.msg(p, PSL.PLAYER_NOT_FOUND.msg());
+            }
+            UUID tpUuid = UUIDCache.getUUIDFromName(tpName);
+
+            // run region search on the main thread (WorldGuard is not thread-safe)
+            Bukkit.getScheduler().runTask(OdisseyProtecciones.getInstance(), () -> {
+                List<PSRegion> regions = PSPlayer.fromUUID(tpUuid).getPSRegionsCrossWorld(p.getWorld(), false);
+
+                // check if region was found
+                if (regions.isEmpty()) {
+                    PSL.msg(p, PSL.REGION_NOT_FOUND_FOR_PLAYER.msg()
+                            .replace("%player%", tpName));
+                    return;
+                } else if (regionNumber > regions.size()) {
+                    PSL.msg(p, PSL.ONLY_HAS_REGIONS.msg()
+                            .replace("%player%", tpName)
+                            .replace("%num%", "" + regions.size()));
+                    return;
+                }
+
+                teleportPlayer(p, regions.get(regionNumber - 1));
+            });
+        }
+
+        return true;
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
+        return null;
+    }
+
+    static void teleportPlayer(Player p, PSRegion r) {
+        if (r.getTypeOptions() == null) {
+            PSL.msg(p, ChatColor.RED + "Esta region tiene un problema y el tipo de bloque (" + r.getType() + ") no esta configurado. Contacta a un administrador.");
+            Bukkit.getLogger().info(ChatColor.RED + "Esta region tiene un problema y el tipo de bloque (" + r.getType() + ") no esta configurado.");
+            return;
+        }
+
+        // teleport player
+        if (r.getTypeOptions().tpWaitingSeconds == 0 || p.hasPermission("odisseyprotecciones.tp.bypasswait")) {
+            // no teleport delay
+            PSL.msg(p, PSL.TPING.msg());
+            Bukkit.getScheduler().runTask(OdisseyProtecciones.getInstance(), () -> p.teleport(r.getHome())); // run on main thread, not async
+        } else if (!r.getTypeOptions().noMovingWhenTeleportWaiting) {
+            // teleport delay, but doesn't care about moving
+            p.sendMessage(PSL.TP_IN_SECONDS.msg().replace("%seconds%", "" + r.getTypeOptions().tpWaitingSeconds));
+
+            Bukkit.getScheduler().runTaskLater(OdisseyProtecciones.getInstance(), () -> {
+                PSL.msg(p, PSL.TPING.msg());
+                p.teleport(r.getHome());
+            }, 20L * r.getTypeOptions().tpWaitingSeconds);
+
+        } else {// delay and not allowed to move
+            PSL.msg(p, PSL.TP_IN_SECONDS.msg().replace("%seconds%", "" + r.getTypeOptions().tpWaitingSeconds));
+            Location l = p.getLocation().clone();
+            UUID uuid = p.getUniqueId();
+
+            // remove queued teleport if already running
+            if (taskCounter.get(uuid) != null) removeUUIDTimer(uuid);
+
+            // add teleport wait tasks to queue
+            waitCounter.put(uuid, 0);
+            taskCounter.put(uuid, Bukkit.getScheduler().runTaskTimer(OdisseyProtecciones.getInstance(), () -> {
+                        Player pl = Bukkit.getPlayer(uuid);
+                        // cancel if the player is not on the server
+                        if (pl == null) {
+                            removeUUIDTimer(uuid);
+                            return;
+                        }
+
+                        if (waitCounter.get(uuid) == null) {
+                            removeUUIDTimer(uuid);
+                            return;
+                        }
+                        // increment seconds
+                        waitCounter.put(uuid, waitCounter.get(uuid) + 1);
+
+                        OdisseyProtecciones.getInstance().debug(String.format("Checking player movement. Player location: (%.2f, %.2f, %.2f), actual location: (%.2f, %.2f, %.2f)", pl.getLocation().getX(), pl.getLocation().getY(), pl.getLocation().getZ(), l.getX(), l.getY(), l.getZ()));
+
+                        // if the player moved cancel it
+                        if (!inThreshold(l.getX(), pl.getLocation().getX()) || !inThreshold(l.getY(), pl.getLocation().getY()) || !inThreshold(l.getZ(), pl.getLocation().getZ())) {
+                            OdisseyProtecciones.getInstance().debug(String.format("Fuera del umbral. Comprobacion X: %s, Y: %s, Z: %s", inThreshold(l.getX(), pl.getLocation().getX()), inThreshold(l.getY(), pl.getLocation().getY()), inThreshold(l.getZ(), pl.getLocation().getZ())));
+                            PSL.msg(pl, PSL.TP_CANCELLED_MOVED.msg());
+                            removeUUIDTimer(uuid);
+                        } else if (waitCounter.get(uuid) == r.getTypeOptions().tpWaitingSeconds * 4) { // * 4 since this loops 4 times a second
+                            // if the timer has passed, teleport and cancel
+                            PSL.msg(pl, PSL.TPING.msg());
+                            pl.teleport(r.getHome());
+                            removeUUIDTimer(uuid);
+                        }
+                    }, 5, 5) // loop 4 times a second
+            );
+        }
+    }
+
+    private static boolean inThreshold(double location, double playerLoc) {
+        return playerLoc <= location + 1.0 && playerLoc >= location - 1.0;
+    }
+
+    private static void removeUUIDTimer(UUID uuid) {
+        if (taskCounter.get(uuid) != null) taskCounter.get(uuid).cancel();
+        waitCounter.remove(uuid);
+        taskCounter.remove(uuid);
+    }
+}
